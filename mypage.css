@@ -1,0 +1,115 @@
+body {
+	color: #000;
+	font-family:Monospace;
+	font-size:13px;
+	text-align:left;
+
+	background-color: #fff;
+	margin: 0px;
+	overflow: hidden;
+}
+canvas{
+	opacity: 0.0;
+	transition: opacity 9.0s ease-in;
+}
+canvas:hover{
+	opacity: 1.0;
+	transition: opacity 1.0s ease-in;
+}
+
+div{
+	margin-top:1px;
+	margin-bottom:1px;
+	padding-right:3px;
+	padding-left:3px;
+	margin-left:3px;
+	opacity: 0.95;
+}
+#langsAndLinks{
+	width: 336px;
+}
+.ClearShadeLeft{
+	border-left: 2px solid #CCCCCC;
+	position: absolute;
+	z-index:1;
+}
+.blue1{
+	width: 240px;
+	background-color: ghostwhite;
+	border-right: 2px solid #CCCCCC;
+}
+.blue2{
+	background-color: darkkhaki;
+	border-right: 2px solid #AAAAAA;
+}
+.blue3{
+	background-color: darkkhaki;
+	width : 233px;
+	text-align: center;
+	padding-top: 1px;
+	float:right;
+	border-right: 2px solid #AAAAAA;
+}
+h1{
+	margin-top:1px;
+	margin-bottom:-10px;
+	margin-right:0px;
+	margin-left:10px;
+	font-family: 'Arvo', serif;
+}
+h2{
+	margin-top:0px;
+	margin-bottom:-20px;
+	margin-right:0px;
+	margin-left:10px;
+	font-family: 'Arvo', serif;
+}
+a{
+	margin-left:0px;
+	margin-right:10px;
+	font-family: 'Arvo', serif;
+}
+font{
+	margin-top:0px;
+	margin-bottom:0px;
+	margin-left:30px;
+	margin-right:10px;
+	font-family: 'Arvo', serif;
+}
+
+.icon-link{
+	color: #29e711;
+	padding-left: 2px;
+	padding-right: 2px;
+	transition: padding-right  .3s ease;
+	transition: padding-left  .3s ease;
+	transition: color  .3s ease;
+}
+
+.icon-link, icon-link:visited{
+	color: #ecf0f1;
+}
+.icon-link:hover{
+	color: #2980b9;
+	padding-left: 8px;
+	padding-right: 8px;
+	transition: color  .3s ease;
+	transition: padding-right  .3s ease;
+	transition: padding-left  .3s ease;
+	
+}
+
+#fl{
+	float : left;
+}
+#fr{
+	float : right;
+}
+#fc{
+	float : center;
+}
+
+#stats { position: absolute; top:0; left: 0 }
+#stats #fps { background: transparent !important }
+#stats #fps #fpsText { color: #777 !important }
+#stats #fps #fpsGraph { display: none }
