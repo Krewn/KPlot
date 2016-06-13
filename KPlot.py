@@ -39,7 +39,7 @@ def testFont():
 	drawText(lowerCase,im,(5,50),15)
 	drawText(numbers,im,(5,100),15)
 	im.show()
-#testFont()
+testFont()
 
 def paddedPrint(s,l):
     if(type(s) == float):
@@ -165,7 +165,7 @@ def get(data,key,defaultVaule = False):#defaultsFalse
 class grapher():
 	def __init__(self):
 		self.clear()
-	def clear(self verbose = False):
+	def clear(self, verbose = False):
 		self.dataFrame = frame()
 	def setFrame(f):
 		self.dataFrame = f
