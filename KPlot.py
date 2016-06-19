@@ -68,6 +68,16 @@ class frame:
 		self.pointSpecPoints = []
 		self.methods = {}
 		self.nonNumerics = False
+	def toArray(self,headers = False):
+		ret = []
+		for n,k in enumerate(self.rows):
+			ret.append([])
+			for k2 in self.cols:
+				ret[n].append(self.data[k][k2])
+		if headers:
+			return(ret,self.rows,self.cols)
+		return(ret)
+				
 	def deSelectColumns(self):
 		self.colSelector = [False]*len(columns)
 	def selectColumns(self):
@@ -191,3 +201,198 @@ class grapher():
 	
 def gifPlot(grapher,graphs):
 	print("placeHolder")
+
+
+
+
+def hexidecimalDiget(n,deHex = False):
+	if(n<0):
+		print "negitive values not supported by call to hexidecimalDiget("+str(n)+")"
+		return None
+	elif(n < 10):
+		return str(n)
+	elif(n < 15):
+		return ["a","b","c","d","e","f"][n-10]
+	elif(n in ["a","b","c","d","e","f"]):
+		if deHex:
+			return ["a","b","c","d","e","f"].index(n)
+		return n
+	else:
+		print "call to hexidecimalDiget("+str(n)+") not supported!"
+		return None
+
+def colorFormHexArray(arr):
+	if len(arr)!=3 and len(arr)!=6:
+		print "invalid length for color on call to colorFormHexArray("+str(arr)+")"
+		return None
+	elif None in arr:
+		print "cannot make color from None arguments in "+str(arr)
+		return None
+	else:
+		ret = "#"
+		for k in arr:
+			if(type(k) == list):
+				for k2 in k:
+					ret+=hexidecimalDiget(k)
+			else:
+				ret+=hexidecimalDiget(k)
+		return ret
+
+def arrayFromColor(c):
+	c = c.replace("#","")
+	col = []
+	for n,k in enumerate(c):
+		if(len(c) == 3):
+			col.append([hexidecimalDiget(k,deHex = True)])
+		elif(len(c) == 6):
+			col.append([hexidecimalDiget(c[(n+1)*2-2],deHex = True),hexidecimalDiget(c[(n+1)*2-2],deHex = True)])
+	return(col)
+
+def intFromHexPair(hp):
+	ret = 0
+	for n,k in enumerate(hp):
+		digBase = 16**(len(hp)-n-1)
+		ret+=digBase*hexidecimalDiget(hp[0],deHex = True)
+	return ret
+
+def hexPairFromInt(I,minDigits = 1,maxDigits = 256):
+	if I<0:
+		print "negitive numbers not supported by hexPairFromInt"
+	k= 0
+	while(16**(k+1) <= I):
+		k+=1
+	if k < minDigits:
+		k = minDigits
+	if k > minDigits:
+		print("maxDigitsExceeded")
+	ret = []
+	while k>=0:
+		dig = 16**k
+		ret.append(hexidecimalDiget(int(I)%(dig)))
+		I-=dig
+		k-=1
+	return ret
+
+def specColor(start,end,bottom,top):
+	start = arrayFromColor(start)
+	end = arrayFromColor(end)
+	def ret(v):
+		if( v<start or c>end ):
+			print("value out of range "+str([start,end]))
+			return('#aa0000') #eyo <- error red
+		else:
+			starts = [intFromHexPair(k) for k in start]
+			ends = [intFromHexPair(hp) for k in end]
+			normalized = (v-bottom)/(top-bottom)
+			return colorFormHexArray([hexPairFromInt(int((starts[n]-ends[n])*normalized),minDigits = 1,maxDigits = 256) for n,k in enumerate(starts)])
+	return ret
+
+def testColors(): #Todo
+	test1 = specColor('#000000','#eeeeee',0,500)
+	
+
+def toMatLabArray(varName,arr):
+	ret = varName+"="
+	if type(arr) == list:
+		ret +="["
+		for k in arr:
+			if type(k) == list:
+				for k2 in k:
+					ret+=str(k2)+","
+				ret+=";"
+			else:
+				ret+=str(k)+","
+		ret += "]"
+	else:
+		ret += str(arr)+";"
+	return(ret)
+
+def curlyList(l):
+	return str([str(k) for k in l]).replace("[","{").replace("]","}")
+
+def mlStepper(l):
+	s = "["
+	s+=str(min(l))+":"
+	s+=str(float(max(l)-min(l))/float(len(l)))+":"
+	s+=str(max(l))+"]"
+	return(s)
+
+def durp7(l):
+	top = float(max(l))
+	step = (float(max(l))-float(min(l)))/6.
+	r = float(min(l))
+	ret = []
+	while(r<=top):
+		ret.append(round(r,1))
+		r+=step
+	return(ret)
+
+import os
+
+def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = None , yticks = None):
+	varstr = toMatLabArray("InvestmentReturns",arr)
+	f = open(opFile+".m","w")
+	graphstr = varstr+";\n"
+	graphstr +="surf("+varstr.split("=")[0]+");\n"
+	graphstr +='view(0,90); shading interp;colorbar;axis("nolabel");\n'
+	graphstr +='xlabel("'+xlabel+'");ylabel("'+ylabel+'");\n'
+	graphstr +='title("'+title+'");\n'
+	if xticks != None:
+		xticks = durp7(xticks)
+		graphstr +='set(gca,"XLim",[0 '+str(len(arr[0]))+']);\n'
+		graphstr +='set(gca,"XTickLabel",'+curlyList(xticks)+');\n'
+		graphstr +='L = get(gca,"XLim");'
+		graphstr +='set(gca,"XTick",linspace(L(1),L(2),7));\n'
+	if yticks != None:
+		yticks = durp7(yticks)
+		graphstr +='set(gca,"YLim",[0 '+str(len(arr))+']);\n'
+		graphstr +='set(gca,"YTickLabel",'+curlyList(yticks)+');\n'
+		graphstr +='L = get(gca,"YLim");'
+		graphstr +='set(gca,"YTick",linspace(L(1),L(2),7));\n'
+	graphstr +='axis("tight");\n'
+	f.write(graphstr)
+	f.close()
+	f = open(opFile+".sh","w")
+	f.write("octave --persist "+opFile+".m")
+	f.close()
+	os.system("chmod +x "+opFile+".sh")
+	os.system("./"+opFile+".sh")
+
+def investOnRatios(ratio,investment,step): # Make some sample data
+	I = 0
+	ret = []
+	invs = []
+	while(I<investment):
+		temp = [I*k-I for k in ratio]
+		ret.append(temp)
+		invs.append(I)
+		I+=step
+	return(ret,invs)
+
+def testMatlabUtil():
+	a = range(80,110)
+	b = [k/100. for k in a]
+	c,d = investOnRatios(b,10.,1.)
+	e =[k*10 for k in range(8,12)]
+	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
+
+	a = range(0,20)
+	b = [k/10. for k in a]
+	c,d = investOnRatios(b,10.,1.)
+	e =[k*10 for k in range(8,12)]
+	mlSurf(c,"basic","% Return","Investment","Gross",xticks=[k*10 for k in a],yticks=d)
+
+#testMatlabUtil()
+
+
+
+
+
+
+
+
+
+
+
+
+
