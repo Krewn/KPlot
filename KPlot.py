@@ -291,6 +291,17 @@ def testColors(): #Todo
 	test1 = specColor('#000000','#eeeeee',0,500)
 	
 
+def investOnRatios(ratio,investment,step):
+	I = 0
+	ret = []
+	invs = []
+	while(I<investment):
+		temp = [I*k-I for k in ratio]
+		ret.append(temp)
+		invs.append(I)
+		I+=step
+	return(ret,invs)
+
 def toMatLabArray(varName,arr):
 	ret = varName+"="
 	if type(arr) == list:
@@ -318,37 +329,35 @@ def mlStepper(l):
 	return(s)
 
 def durp7(l):
-	top = float(max(l))
 	step = (float(max(l))-float(min(l)))/6.
 	r = float(min(l))
-	ret = []
-	while(r<=top):
+	ret = [""]
+	for k in range(0,7):
 		ret.append(round(r,1))
 		r+=step
 	return(ret)
 
+def boy(x,y,xname="xName",yname="yName"):
+	return(toMatLabArray(xname,x),toMatLabArray(yname,y))
+	
+
 import os
+import warnings
 
 def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = None , yticks = None):
 	varstr = toMatLabArray("InvestmentReturns",arr)
 	f = open(opFile+".m","w")
 	graphstr = varstr+";\n"
-	graphstr +="surf("+varstr.split("=")[0]+");\n"
-	graphstr +='view(0,90); shading interp;colorbar;axis("nolabel");\n'
+	if xticks != None and yticks != None:
+		xs,ys = boy(xticks,yticks)
+		graphstr += xs+";\n"
+		graphstr += ys+";\n"
+		graphstr +="surf("+xs.split("=")[0]+","+ys.split("=")[0]+","+varstr.split("=")[0]+");\n"
+	else:
+		graphstr +="surf("+varstr.split("=")[0]+");\n"
+	graphstr +='view(0,90); shading interp;colorbar;\n'
 	graphstr +='xlabel("'+xlabel+'");ylabel("'+ylabel+'");\n'
 	graphstr +='title("'+title+'");\n'
-	if xticks != None:
-		xticks = durp7(xticks)
-		graphstr +='set(gca,"XLim",[0 '+str(len(arr[0]))+']);\n'
-		graphstr +='set(gca,"XTickLabel",'+curlyList(xticks)+');\n'
-		graphstr +='L = get(gca,"XLim");'
-		graphstr +='set(gca,"XTick",linspace(L(1),L(2),7));\n'
-	if yticks != None:
-		yticks = durp7(yticks)
-		graphstr +='set(gca,"YLim",[0 '+str(len(arr))+']);\n'
-		graphstr +='set(gca,"YTickLabel",'+curlyList(yticks)+');\n'
-		graphstr +='L = get(gca,"YLim");'
-		graphstr +='set(gca,"YTick",linspace(L(1),L(2),7));\n'
 	graphstr +='axis("tight");\n'
 	f.write(graphstr)
 	f.close()
@@ -358,41 +367,25 @@ def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = Non
 	os.system("chmod +x "+opFile+".sh")
 	os.system("./"+opFile+".sh")
 
-def investOnRatios(ratio,investment,step): # Make some sample data
-	I = 0
-	ret = []
-	invs = []
-	while(I<investment):
-		temp = [I*k-I for k in ratio]
-		ret.append(temp)
-		invs.append(I)
-		I+=step
-	return(ret,invs)
-
-def testMatlabUtil():
-	a = range(80,110)
-	b = [k/100. for k in a]
-	c,d = investOnRatios(b,10.,1.)
-	e =[k*10 for k in range(8,12)]
-	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
-
+def ex1():
 	a = range(0,20)
 	b = [k/10. for k in a]
 	c,d = investOnRatios(b,10.,1.)
 	e =[k*10 for k in range(8,12)]
 	mlSurf(c,"basic","% Return","Investment","Gross",xticks=[k*10 for k in a],yticks=d)
 
-#testMatlabUtil()
+def ex2():
+	a = range(80,110)
+	b = [k/100. for k in a]
+	c,d = investOnRatios(b,10.,1.)
+	e =[k*10 for k in range(8,12)]
+	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
+ex2()
 
-
-
-
-
-
-
-
-
-
-
-
-
+def ex3():
+	a = range(99,102)
+	b = [k/100. for k in a]
+	c,d = investOnRatios(b,10.,1.)
+	e =[k*10 for k in range(8,12)]
+	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
+ex3()
