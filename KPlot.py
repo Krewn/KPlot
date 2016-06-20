@@ -39,7 +39,7 @@ def testFont():
 	drawText(lowerCase,im,(5,50),15)
 	drawText(numbers,im,(5,100),15)
 	im.show()
-testFont()
+#testFont()
 
 def paddedPrint(s,l):
     if(type(s) == float):
@@ -77,7 +77,10 @@ class frame:
 		if headers:
 			return(ret,self.rows,self.cols)
 		return(ret)
-				
+	def flat(self):
+		for k in self.rows:
+			for k in self.cols:
+				ret.append((self.data[k][k2],(k,k2)))
 	def deSelectColumns(self):
 		self.colSelector = [False]*len(columns)
 	def selectColumns(self):
@@ -127,7 +130,10 @@ class frame:
 						self.data[self.rows[n]][self.cols[n2]] = float(raw[k][k2])
 					except ValueError:
 						print "Cell["+str(n)+":"+str(k)+"]["+str(n2)+":"+str(k2)+"]"+" contains a non-numeric value ="+str(raw[k][k2])
-						self.data[self.rows[n]][self.cols[n2]] = raw[k][k2]
+						if(raw[k][k2] in ["None","","nan"]):
+							self.data[self.rows[n]][self.cols[n2]] = None
+						else:	
+							self.data[self.rows[n]][self.cols[n2]] = raw[k][k2]
 						self.nonNumerics = True
 			except IndexError:
 				try:
@@ -143,8 +149,10 @@ class frame:
 			self.note = ""
 		self.note = ("\n" if len(self.note) > 0 else "")+n
 	def pretty(self):
-		out = "File:\t"+self.inputFile+"\n"
-		out += "Note:\t"+self.note+"\n"
+		out = ""
+		out += "File:\t"+self.inputFile+"\n" if self.inputFile!=None else ""
+		if hasattr(self, "note"):
+			out += "Note:\t"+self.note +"\n"
 		out+=paddedPrint("",15)
 		for k in self.cols:
 		    out+=paddedPrint(k,15)
@@ -156,16 +164,18 @@ class frame:
 			except KeyError:
 				out+=redPrint(str(""),15)
 		return("\n\n"+out+"\n\n")
+	def csv():
+		print("Todo")
 
 def testIO():
 	kframe = frame()
 	kframe.addNote("Test Driven development makes for higher quality, more usable products.")
-	kframe.loadFromCsv("testData.csv")
+	kframe.loadFromCsv("./testData/basicTestData.csv")
 	print(kframe.pretty())
 	kframe.clear()
-	kframe.loadFromCsv("testData.csv",rowNames=True, colNames=True)
+	kframe.loadFromCsv("./testData/basicTestData.csv",rowNames=True, colNames=True)
 	print(kframe.pretty())
-testIO()
+#testIO()
 
 
 
@@ -373,6 +383,7 @@ def ex1():
 	c,d = investOnRatios(b,10.,1.)
 	e =[k*10 for k in range(8,12)]
 	mlSurf(c,"basic","% Return","Investment","Gross",xticks=[k*10 for k in a],yticks=d)
+#ex1()
 
 def ex2():
 	a = range(80,110)
@@ -380,7 +391,7 @@ def ex2():
 	c,d = investOnRatios(b,10.,1.)
 	e =[k*10 for k in range(8,12)]
 	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
-ex2()
+#ex2()
 
 def ex3():
 	a = range(99,102)
@@ -388,4 +399,44 @@ def ex3():
 	c,d = investOnRatios(b,10.,1.)
 	e =[k*10 for k in range(8,12)]
 	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
-ex3()
+#ex3()
+
+
+
+def cap():
+	a = range(-10,10)
+	cpc = 2
+	ret = []
+	r =[k/10. for k in range(0,10)]
+	for k in r:
+		ret.append([(1.5**k2)*k-cpc*k2 for k2 in a])
+	mlSurf(ret,"cvsp","Complexity","Time Invested","Productivity",xticks=a,yticks=r)
+#cap()
+
+import make as kl #klearner
+import geoTools as gt  #back and for for longitude latitude to XYZ tools
+
+def geoKlTest():
+	f = frame()
+	f.loadFromCsv("./testData/geoTestData.csv",rowNames=True, colNames=True)
+	arr = f.toArray()
+	print f.pretty()
+	for n,k in enumerate(f.rows):
+		for n2,k2 in enumerate(f.cols):
+			if(arr[n][n2] == None):
+				print(k+":"+k2+":"+str(round(kl.kfp(arr,n,n2),2)))
+	xyz = gt.cordToEuc(arr[0][0],arr[0][1])
+	print arr[0][0],arr[0][1],xyz
+	euc = gt.eucToCord(xyz[0],xyz[1],xyz[2])
+	print xyz,euc
+geoKlTest()
+
+
+
+
+
+
+
+
+
+
