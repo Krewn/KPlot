@@ -9,10 +9,8 @@ def ica(data, precision = 'float32'):
 def BiSec(v, method = "mean"):
 	if(method == "mean"):
 		avg = sum(v)/float(len(v))
-		ret = [1 if k>avg else 0 for k in v]
-	if(method == "mode"):
-		mode = sum(sorted(v)[len(v)/2-1:len(v)/2+1 if len(v)%2 == 0 else len(v)/2:len(v)/2+1])
-		ret = [1 if k>mode else 0 for k in v]
-	return(ret)
+	if(method == "median"):
+		avg = sum(sorted(v)[len(v)/2-1:len(v)/2+1 if len(v)%2 == 0 else len(v)/2:len(v)/2+1])
+	return([1 if k>mode else 0 for k in v])
 
 
