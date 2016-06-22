@@ -1,45 +1,15 @@
-import Image, ImageDraw
-#Characters are fixed font drawn on a 2x4 grid where y = 3 is the text line bottm.
-characters = {'1':[[(0,1),(1,0),(1,3)],[(0,3),(2,3)]],'2':[[(0,1),(1,0),(2,1),(0,3),(2,3)]],'3':[[(0,1),(1,0),(2,1),(1,1.5),(2,2),(1,3),(0,2)]],'4':[[(0,0),(0,1.5),(2,1.5)],[(2,0),(2,3)]],'5':[[(2,0),(0,0),(0,1,),(1,1),(2,1.75),(2,2.25),(1,3),(0,3)]],'6':[[(1,0),(0,1),(0,3),(2,3),(2,2),(0,2)]],'7':[[(0,0),(2,0),(1,3)]],'8':[[(0,0),(2,0),(2,1),(1.5,1.5),(2,2.5),(2,3),(0,3),(0,2),(0.5,1.5),(0,0.5),(0,0)],[(0.5,1.5),(1.5,1.5)]],'9':[[(0,3),(2,2),(2,0),(0,0),(0,1),(2,1)]],'0':[[(0,0),(0,3),(2,3),(2,0),(0,0),(2,3)]],'a':[[(1.5,3),(1.5,1),(0,1),(0,3),(1.5,3),(2,3)]],'b':[[(0,0),(0,3),(2,3),(2,2),(0,2)]],'c':[[(2,1),(1,1),(0,1.5),(0,2.5),(1,3),(2,3)]],'d':[[(2,0),(2,3),(0,3),(0,2),(2,2)]],'e':[[(2,3),(0,3),(0,1),(2,1),(2,2),(0,2)]],'f':[[(1,3),(1,0),(2,0)],[(0,1.5),(2,1.5)]],'g':[[(2,3),(0,3),(0,1),(2,1),(2,4),(1,4)]],'h':[[(0,3),(0,0)],[(0,2),(2,2),(2,3)]],'i':[[(1,3),(1,1.5)],[(0.75,1.25),(1.25,0.75)]],'j':[[(0,4),(1,4),(1,1.5)],[(0.75,1.25),(1.25,0.75)]],'k':[[(0,3),(0,0)],[(0,2),(1,1)],[(0,2),(2,3)]],'l':[[(1,3),(1,0)]],'m':[[(0,3),(0,1),(2,1),(2,3)],[(1,1),(1,3)]],'n':[[(0,3),(0,1),(2,1),(2,3)]],'o':[[(0,1),(2,1),(2,3),(0,3),(0,1)]],'p':[[(0,4),(0,1),(2,1),(2,3),(0,3)]],'q':[[(2,4),(2,1),(0,1),(0,3),(2,3)]],'r':[[(0,3),(0,1)],[(0,1.5),(1,1),(2,1)]],'s':[[(2,1),(0,1),(0,2),(2,2),(2,3),(0,3),]],'t':[[(1,0),(1,3)],[(0,1.5),(2,1.5)]],'u':[[(0,1),(0,3),(2,3),(2,1)]],'v':[[(0,1),(1,3),(2,1)]],'w':[[(0,1),(0,3),(1,2),(2,3),(2,1)]],'x':[[(0,1),(2,3)],[(0,3),(2,1)]],'y':[[(0,1),(0,3),(2,3)],[(2,1),(2,4),(1,4)]],'z':[[(0,1),(2,1),(0,3),(2,3)]],'A':[[(0,3),(1,0),(2,3)],[(0,1.5),(2,1.5)]],'B':[[(0,3),(0,0),(1.5,0),(1.5,1.5)],[(0,3),(2,3),(2,1.5),(0,1.5)]],'C':[[(2,0),(0,0),(0,3),(2,3)]],'D':[[(0,0),(0,3),(1.5,3),(2,2.5),(2,0.5),(1.5,0),(0,0)]],'E':[[(2,0),(0,0),(0,3),(2,3)],[(0,1.5),(1,1.5)]],'F':[[(0,3),(0,0),(2,0)],[(0,1.5),(1,1.5)]],'G':[[(2,0.5),(2,0),(0,0),(0,3),(2,3),(2,1.5),(1,1.5)]],'H':[[(0,0),(0,3)],[(0,1.5),(2,1.5)],[(2,0),(2,3)]],'I':[[(0,0),(2,0)],[(1,0),(1,3)],[(0,3),(2,3)]],'J':[[(0,0),(2,0)],[(1,0),(1,3),(0,2)]],'K':[[(0,0),(0,3)],[(2,0),(0,1.5),(2,3)]],'L':[[(0,0),(0,3),(2,3)]],'M':[[(0,3),(0,0),(1,1),(2,0),(2,3)]],'N':[[(0,3),(0,0),(2,3),(2,0)]],'O':[[(0,0),(0,3),(2,3),(2,0),(0,0)]],'P':[[(0,3),(0,0),(2,0),(2,1.5),(0,1.5)]],'Q':[[(2,3),(2,0),(0,0),(0,3),(2,3),(1,2)]],'R':[[(0,3),(0,0),(2,0),(2,1),(0,1.5),(2,3)]],'S':[[(2,0),(0,0),(0,1),(2,2),(2,3),(0,3)]],'T':[[(0,0),(2,0)],[(1,3),(1,0)]],'U':[[(0,0),(0,3),(2,3),(2,0)]],'V':[[(0,0),(1,3),(2,0)]],'W':[[(0,0),(0,3),(1,2),(2,3),(2,0)]],'X':[[(0,0),(2,3)],[(0,3),(2,0)]],'Y':[[(0,0),(1,1),(2,0)],[(1,1),(1,3)]],'Z':[[(0,0),(2,0),(0,3),(2,3)]]}
+"""
+ __  _  ____   ___   _     ______ 
+|  |/ ]|    \ /   \ | |   |      |<- krewn.github.io/KPlot
+|  ' / |  o  )     || |   |      |
+|    \ |   _/|  O  || |___|_|  |_|
+|     ||  |  |     ||     | |  |  
+|  .  ||  |  |     ||     | |  |  
+|__|\_||__|   \___/ |_____| |__|  Kevin Nelson -> kpie314@gmail.com
+                                  
+"""
 
-def tupleSum(a,b):
-	return tuple([sum(k) for k in zip(a,b)])
 
-def scale(vector,scaler):
-	return tuple([scaler*k for k in vector])
-
-def drawLine(start, end, img, relativeLocation = (0,0) ,size = 1):
-	draw = ImageDraw.Draw(img)
-	draw.line( tupleSum(relativeLocation,scale(start,size))+tupleSum(relativeLocation,scale(end,size)), fill=128)
-	del draw
-
-def drawLetter(letter,scale,img,relativeLocation,size = 1):
-	global characters
-	try:
-		lines = characters[letter]
-	except IndexError:
-		print letter+" is not supported: to add suport for this letter make an entery in the characters variable."
-	for k in lines:
-		for k2 in range(1,len(k)):
-			drawLine(k[k2-1], k[k2], img, relativeLocation, size)
-
-def drawText(text,img,relativeLocation,size = 1):
-	step = size*3
-	place = list(relativeLocation)
-	for k in text:
-		drawLetter(k, scale, img, place, size)
-	 	place[0] += step
-
-def testFont():
-	im = Image.new("RGB", (900, 512), "white")
-	numbers = "1234567890"
-	lowerCase = "abcdefghijklmnopqrstuvwxyz"
-	upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	drawText(upperCase,im,(5,5),15)
-	drawText(lowerCase,im,(5,50),15)
-	drawText(numbers,im,(5,100),15)
-	im.show()
-#testFont()
 
 def paddedPrint(s,l):
     if(type(s) == float):
@@ -167,7 +137,7 @@ class frame:
 	def csv():
 		print("Todo")
 
-def testIO():
+def testCSV():
 	kframe = frame()
 	kframe.addNote("Test Driven development makes for higher quality, more usable products.")
 	kframe.loadFromCsv("./testData/basicTestData.csv")
@@ -175,10 +145,71 @@ def testIO():
 	kframe.clear()
 	kframe.loadFromCsv("./testData/basicTestData.csv",rowNames=True, colNames=True)
 	print(kframe.pretty())
-#testIO()
+#testCSV()
+import make as kl #klearner
+def klTest():
+	f = frame()
+	f.loadFromCsv("./testData/geoTestData.csv",rowNames=True, colNames=True)
+	arr = f.toArray()
+	print f.pretty()
+	for n,k in enumerate(f.rows):
+		for n2,k2 in enumerate(f.cols):
+			if(arr[n][n2] == None):
+				print(k+":"+k2+":"+str(round(kl.kfp(arr,n,n2),2)))
+#klTest()
+import geoTools as gt  #back and for for longitude latitude to XYZ tools
+def geoTest():
+	f = frame()
+	f.loadFromCsv("./testData/geoTestData.csv",rowNames=True, colNames=True)
+	arr = f.toArray()
+	xyz = gt.cordToEuc(arr[0][0],arr[0][1])
+	print arr[0][0],arr[0][1],xyz
+	euc = gt.eucToCord(xyz[0],xyz[1],xyz[2])
+	print xyz,euc
+#geoTest()
 
+import Image, ImageDraw
+#Characters are fixed font drawn on a 2x4 grid where y = 3 is the text line bottm.
+characters = {'1':[[(0,1),(1,0),(1,3)],[(0,3),(2,3)]],'2':[[(0,1),(1,0),(2,1),(0,3),(2,3)]],'3':[[(0,1),(1,0),(2,1),(1,1.5),(2,2),(1,3),(0,2)]],'4':[[(0,0),(0,1.5),(2,1.5)],[(2,0),(2,3)]],'5':[[(2,0),(0,0),(0,1,),(1,1),(2,1.75),(2,2.25),(1,3),(0,3)]],'6':[[(1,0),(0,1),(0,3),(2,3),(2,2),(0,2)]],'7':[[(0,0),(2,0),(1,3)]],'8':[[(0,0),(2,0),(2,1),(1.5,1.5),(2,2.5),(2,3),(0,3),(0,2),(0.5,1.5),(0,0.5),(0,0)],[(0.5,1.5),(1.5,1.5)]],'9':[[(0,3),(2,2),(2,0),(0,0),(0,1),(2,1)]],'0':[[(0,0),(0,3),(2,3),(2,0),(0,0),(2,3)]],'a':[[(1.5,3),(1.5,1),(0,1),(0,3),(1.5,3),(2,3)]],'b':[[(0,0),(0,3),(2,3),(2,2),(0,2)]],'c':[[(2,1),(1,1),(0,1.5),(0,2.5),(1,3),(2,3)]],'d':[[(2,0),(2,3),(0,3),(0,2),(2,2)]],'e':[[(2,3),(0,3),(0,1),(2,1),(2,2),(0,2)]],'f':[[(1,3),(1,0),(2,0)],[(0,1.5),(2,1.5)]],'g':[[(2,3),(0,3),(0,1),(2,1),(2,4),(1,4)]],'h':[[(0,3),(0,0)],[(0,2),(2,2),(2,3)]],'i':[[(1,3),(1,1.5)],[(0.75,1.25),(1.25,0.75)]],'j':[[(0,4),(1,4),(1,1.5)],[(0.75,1.25),(1.25,0.75)]],'k':[[(0,3),(0,0)],[(0,2),(1,1)],[(0,2),(2,3)]],'l':[[(1,3),(1,0)]],'m':[[(0,3),(0,1),(2,1),(2,3)],[(1,1),(1,3)]],'n':[[(0,3),(0,1),(2,1),(2,3)]],'o':[[(0,1),(2,1),(2,3),(0,3),(0,1)]],'p':[[(0,4),(0,1),(2,1),(2,3),(0,3)]],'q':[[(2,4),(2,1),(0,1),(0,3),(2,3)]],'r':[[(0,3),(0,1)],[(0,1.5),(1,1),(2,1)]],'s':[[(2,1),(0,1),(0,2),(2,2),(2,3),(0,3),]],'t':[[(1,0),(1,3)],[(0,1.5),(2,1.5)]],'u':[[(0,1),(0,3),(2,3),(2,1)]],'v':[[(0,1),(1,3),(2,1)]],'w':[[(0,1),(0,3),(1,2),(2,3),(2,1)]],'x':[[(0,1),(2,3)],[(0,3),(2,1)]],'y':[[(0,1),(0,3),(2,3)],[(2,1),(2,4),(1,4)]],'z':[[(0,1),(2,1),(0,3),(2,3)]],'A':[[(0,3),(1,0),(2,3)],[(0,1.5),(2,1.5)]],'B':[[(0,3),(0,0),(1.5,0),(1.5,1.5)],[(0,3),(2,3),(2,1.5),(0,1.5)]],'C':[[(2,0),(0,0),(0,3),(2,3)]],'D':[[(0,0),(0,3),(1.5,3),(2,2.5),(2,0.5),(1.5,0),(0,0)]],'E':[[(2,0),(0,0),(0,3),(2,3)],[(0,1.5),(1,1.5)]],'F':[[(0,3),(0,0),(2,0)],[(0,1.5),(1,1.5)]],'G':[[(2,0.5),(2,0),(0,0),(0,3),(2,3),(2,1.5),(1,1.5)]],'H':[[(0,0),(0,3)],[(0,1.5),(2,1.5)],[(2,0),(2,3)]],'I':[[(0,0),(2,0)],[(1,0),(1,3)],[(0,3),(2,3)]],'J':[[(0,0),(2,0)],[(1,0),(1,3),(0,2)]],'K':[[(0,0),(0,3)],[(2,0),(0,1.5),(2,3)]],'L':[[(0,0),(0,3),(2,3)]],'M':[[(0,3),(0,0),(1,1),(2,0),(2,3)]],'N':[[(0,3),(0,0),(2,3),(2,0)]],'O':[[(0,0),(0,3),(2,3),(2,0),(0,0)]],'P':[[(0,3),(0,0),(2,0),(2,1.5),(0,1.5)]],'Q':[[(2,3),(2,0),(0,0),(0,3),(2,3),(1,2)]],'R':[[(0,3),(0,0),(2,0),(2,1),(0,1.5),(2,3)]],'S':[[(2,0),(0,0),(0,1),(2,2),(2,3),(0,3)]],'T':[[(0,0),(2,0)],[(1,3),(1,0)]],'U':[[(0,0),(0,3),(2,3),(2,0)]],'V':[[(0,0),(1,3),(2,0)]],'W':[[(0,0),(0,3),(1,2),(2,3),(2,0)]],'X':[[(0,0),(2,3)],[(0,3),(2,0)]],'Y':[[(0,0),(1,1),(2,0)],[(1,1),(1,3)]],'Z':[[(0,0),(2,0),(0,3),(2,3)]]}
 
+def tupleSum(a,b):
+	return tuple([sum(k) for k in zip(a,b)])
 
+def scale(vector,scaler):
+	return tuple([scaler*k for k in vector])
+
+def drawLine(start, end, img, relativeLocation = (0,0) ,size = 1):
+	draw = ImageDraw.Draw(img)
+	draw.line( tupleSum(relativeLocation,scale(start,size))+tupleSum(relativeLocation,scale(end,size)), fill=128)
+	del draw
+
+def drawLetter(letter,scale,img,relativeLocation,size = 1):
+	global characters
+	try:
+		lines = characters[letter]
+	except IndexError:
+		print letter+" is not supported: to add suport for this letter make an entery in the characters variable."
+	for k in lines:
+		for k2 in range(1,len(k)):
+			drawLine(k[k2-1], k[k2], img, relativeLocation, size)
+
+def drawText(text,img,relativeLocation,size = 1):
+	step = size*3
+	place = list(relativeLocation)
+	for k in text:
+		drawLetter(k, scale, img, place, size)
+	 	place[0] += step
+
+def testFont():
+	im = Image.new("RGB", (900, 512), "white")
+	numbers = "1234567890"
+	lowerCase = "abcdefghijklmnopqrstuvwxyz"
+	upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	drawText(upperCase,im,(5,5),15)
+	drawText(lowerCase,im,(5,50),15)
+	drawText(numbers,im,(5,100),15)
+	im.show()
+#testFont()
 def get(data,key,defaultVaule = False):#defaultsFalse
 	return(data[key] if key in data else defaultVaule)
 
@@ -210,96 +241,7 @@ class grapher():
 			print("placeHolder")
 	
 def gifPlot(grapher,graphs):
-	print("placeHolder")
-
-
-
-
-def hexidecimalDiget(n,deHex = False):
-	if(n<0):
-		print "negitive values not supported by call to hexidecimalDiget("+str(n)+")"
-		return None
-	elif(n < 10):
-		return str(n)
-	elif(n < 15):
-		return ["a","b","c","d","e","f"][n-10]
-	elif(n in ["a","b","c","d","e","f"]):
-		if deHex:
-			return ["a","b","c","d","e","f"].index(n)
-		return n
-	else:
-		print "call to hexidecimalDiget("+str(n)+") not supported!"
-		return None
-
-def colorFormHexArray(arr):
-	if len(arr)!=3 and len(arr)!=6:
-		print "invalid length for color on call to colorFormHexArray("+str(arr)+")"
-		return None
-	elif None in arr:
-		print "cannot make color from None arguments in "+str(arr)
-		return None
-	else:
-		ret = "#"
-		for k in arr:
-			if(type(k) == list):
-				for k2 in k:
-					ret+=hexidecimalDiget(k)
-			else:
-				ret+=hexidecimalDiget(k)
-		return ret
-
-def arrayFromColor(c):
-	c = c.replace("#","")
-	col = []
-	for n,k in enumerate(c):
-		if(len(c) == 3):
-			col.append([hexidecimalDiget(k,deHex = True)])
-		elif(len(c) == 6):
-			col.append([hexidecimalDiget(c[(n+1)*2-2],deHex = True),hexidecimalDiget(c[(n+1)*2-2],deHex = True)])
-	return(col)
-
-def intFromHexPair(hp):
-	ret = 0
-	for n,k in enumerate(hp):
-		digBase = 16**(len(hp)-n-1)
-		ret+=digBase*hexidecimalDiget(hp[0],deHex = True)
-	return ret
-
-def hexPairFromInt(I,minDigits = 1,maxDigits = 256):
-	if I<0:
-		print "negitive numbers not supported by hexPairFromInt"
-	k= 0
-	while(16**(k+1) <= I):
-		k+=1
-	if k < minDigits:
-		k = minDigits
-	if k > minDigits:
-		print("maxDigitsExceeded")
-	ret = []
-	while k>=0:
-		dig = 16**k
-		ret.append(hexidecimalDiget(int(I)%(dig)))
-		I-=dig
-		k-=1
-	return ret
-
-def specColor(start,end,bottom,top):
-	start = arrayFromColor(start)
-	end = arrayFromColor(end)
-	def ret(v):
-		if( v<start or c>end ):
-			print("value out of range "+str([start,end]))
-			return('#aa0000') #eyo <- error red
-		else:
-			starts = [intFromHexPair(k) for k in start]
-			ends = [intFromHexPair(hp) for k in end]
-			normalized = (v-bottom)/(top-bottom)
-			return colorFormHexArray([hexPairFromInt(int((starts[n]-ends[n])*normalized),minDigits = 1,maxDigits = 256) for n,k in enumerate(starts)])
-	return ret
-
-def testColors(): #Todo
-	test1 = specColor('#000000','#eeeeee',0,500)
-	
+	print("placeHolder") # Todo
 
 def investOnRatios(ratio,investment,step):
 	I = 0
@@ -352,7 +294,6 @@ def boy(x,y,xname="xName",yname="yName"):
 	
 
 import os
-import warnings
 
 def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = None , yticks = None):
 	varstr = toMatLabArray("InvestmentReturns",arr)
@@ -377,33 +318,15 @@ def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = Non
 	os.system("chmod +x "+opFile+".sh")
 	os.system("./"+opFile+".sh")
 
-def ex1():
-	a = range(0,20)
-	b = [k/10. for k in a]
-	c,d = investOnRatios(b,10.,1.)
-	e =[k*10 for k in range(8,12)]
-	mlSurf(c,"basic","% Return","Investment","Gross",xticks=[k*10 for k in a],yticks=d)
-#ex1()
-
-def ex2():
-	a = range(80,110)
-	b = [k/100. for k in a]
-	c,d = investOnRatios(b,10.,1.)
-	e =[k*10 for k in range(8,12)]
-	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
-#ex2()
-
-def ex3():
+def mlSurfTest1():
 	a = range(99,102)
 	b = [k/100. for k in a]
 	c,d = investOnRatios(b,10.,1.)
 	e =[k*10 for k in range(8,12)]
 	mlSurf(c,"basic","% Return","Investment","Gross",xticks=a,yticks=d)
-#ex3()
+#mlSurfTest1()
 
-
-
-def cap():
+def  mlSurfTest2():
 	a = range(-10,10)
 	cpc = 2
 	ret = []
@@ -411,30 +334,12 @@ def cap():
 	for k in r:
 		ret.append([(1.5**k2)*k-cpc*k2 for k2 in a])
 	mlSurf(ret,"cvsp","Complexity","Time Invested","Productivity",xticks=a,yticks=r)
-#cap()
+#mlSurfTest2()
 
-import make as kl #klearner
-import geoTools as gt  #back and for for longitude latitude to XYZ tools
-
-def geoKlTest():
-	f = frame()
-	f.loadFromCsv("./testData/geoTestData.csv",rowNames=True, colNames=True)
-	arr = f.toArray()
-	print f.pretty()
-	for n,k in enumerate(f.rows):
-		for n2,k2 in enumerate(f.cols):
-			if(arr[n][n2] == None):
-				print(k+":"+k2+":"+str(round(kl.kfp(arr,n,n2),2)))
-	xyz = gt.cordToEuc(arr[0][0],arr[0][1])
-	print arr[0][0],arr[0][1],xyz
-	euc = gt.eucToCord(xyz[0],xyz[1],xyz[2])
-	print xyz,euc
-geoKlTest()
-
-
-
-
-
+def gridToPixles(tmin,tmax,ymin,ymax,w,h,t,y):
+	retT = ((t-tmin)/(tmax-tmin))*w
+	retY = ((ymax-y)/(ymax-ymin))*h
+return((retT,retY))
 
 
 
