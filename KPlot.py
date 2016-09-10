@@ -1,3 +1,4 @@
+# coding: utf-8
 """
  __  _  ____   ___   _     ______ 
 |  |/ ]|    \ /   \ | |   |      |<- krewn.github.io/KPlot
@@ -25,19 +26,84 @@ def redPrint(s,l):
 def where(vector,condition):
 	return([n for n,k in enumerate(vector) if eval(condition)])
 
+import xlrd
+import csv
+def sheetAsArray(name,index,opFile):
+	with xlrd.open_workbook(name) as wb:
+	    sh = wb.sheet_by_index(index)  # or wb.sheet_by_name('name_of_the_sheet_here')
+	    with open(opFile, 'wb') as f:
+		ret = ""
+		for r in range(sh.nrows):
+			for k in unicode(sh.row_values(r)):
+				ret+=c.writerow(k)+","
+			ret = ret[:-1]
+			ret+="\n"
+		ret = ret[:-1]
+		f.write(ret)
+
+import os
+def explode(inputFile):
+	try:
+		os.mkdir(inputFile+".folder")
+	except OSError:
+		chill = None
+	with xlrd.open_workbook(inputFile) as wb:
+		for k in range(0,wb.nsheets):
+			sh = wb.sheet_by_index(k) # or wb.sheet_by_name('name_of_the_sheet_here')
+			with open(inputFile+".folder"+"/sheet"+str(k)+".csv", 'wb') as f:
+				ret = ""
+				for r in range(sh.nrows):
+					for col in sh.row_values(r):
+						try:
+							ret+=str(col)+","
+						except UnicodeEncodeError:
+							ret+=","
+					ret = ret[:-1]
+					ret+="\n"
+				ret = ret[:-1]
+				f.write(ret)
+
+
 class frame:
+	inputFile = None
+	note = ""
+	cols = []
+	rows = []
+	data = {}
+	pointSpecPoints = []
+	methods = {}
+	nonNumerics = False
 	def init(self):
 		self.clear(verbose = False)
 	def clear(self , verbose = True):
 		if verbose: print "ClearingFrame"
 		self.inputFile = None
 		self.note = ""
-		self.cols = [] # list 
+		self.cols = []
 		self.rows = []
 		self.data = {}
 		self.pointSpecPoints = []
 		self.methods = {}
 		self.nonNumerics = False
+	def getRows(self):
+		return(self.rows)
+	def getCols(self): 
+		return(self.cols)
+	def add(self, row,column,value=None):
+		if not(row in self.rows):
+			self.rows.append(row)
+			self.data[row] = {}
+		if not(column in self.cols):
+			self.cols.append(column)
+		self.data[row][column] = value
+	def add2dDict(self,d):
+		for k in d:
+			for k2 in d[k]:
+				self.add(k,k2,d[k][k2])
+	def getRow(self,r):
+		return [self.data[r][k] for k in self.cols]
+	def getCol(self,c):
+		return [self.data[k][c] for k in self.rows]
 	def toArray(self,headers = False):
 		ret = []
 		for n,k in enumerate(self.rows):
@@ -85,33 +151,44 @@ class frame:
 		self.inputFile = target
 		o = open(target)
 		raw = [k.split(colDelim) for k in o.read().split(rowDelim)]
+		if len(raw[len(raw)-1])==1 and raw[len(raw)-1] == "":
+			raw = raw[:len(raw)-1]
+		#print len(raw)
 		firstRow = piviot[0] + (1 if colNames else 0)
 		firstCol = piviot[1] + (1 if rowNames else 0)
 		lastRow = lastRow if lastRow else len(raw)
 		lastCol = lastCol if lastCol else len(raw[piviot[0]])
 		self.rows = [raw[n][piviot[1]] for n in range(piviot[0]+1,lastRow)] if rowNames else range(0,(len(raw)-piviot[0]))
 		self.cols = raw[piviot[0]][piviot[1]+1:] if colNames else range(0,len(raw[piviot[0]])-piviot[1])
+		#print self.rows
 		self.data = {}
-		for n,k in enumerate(range(firstRow,lastRow)):
-			try:
-				self.data[self.rows[n]] = {}
-				for n2,k2 in enumerate(range(firstCol,lastCol)):
-					try:
-						self.data[self.rows[n]][self.cols[n2]] = float(raw[k][k2])
-					except ValueError:
-						print "Cell["+str(n)+":"+str(k)+"]["+str(n2)+":"+str(k2)+"]"+" contains a non-numeric value ="+str(raw[k][k2])
-						if(raw[k][k2] in ["None","","nan"]):
-							self.data[self.rows[n]][self.cols[n2]] = None
-						else:	
-							self.data[self.rows[n]][self.cols[n2]] = raw[k][k2]
-						self.nonNumerics = True
-			except IndexError:
+		TotalRows = lastRow - firstRow
+		for n,k in enumerate(range(firstRow,lastRow+(1 if (colNames == True and rowNames == False) else 0))):
+			#print str(n)+"/"+str(TotalRows) ,"\r",
+			if colNames == True and rowNames == False:
+				self.data[self.rows[n]] = {k:v for k,v in zip(self.cols,raw[n][piviot[1]+1:])}
+			else:
 				try:
-					del self.data[self.rows[n]]
+					self.data[self.rows[n]] = {}
+					for n2,k2 in enumerate(range(firstCol,lastCol)):
+						try:
+							self.data[self.rows[n]][self.cols[n2]] = float(raw[k][k2])
+						except ValueError:
+							#print "Cell["+str(n)+":"+str(k)+"]["+str(n2)+":"+str(k2)+"]"+" contains a non-numeric value ="+str(raw[k][k2])
+							if(raw[k][k2] in ["None","","nan"]):
+								self.data[self.rows[n]][self.cols[n2]] = None
+							else:	
+								self.data[self.rows[n]][self.cols[n2]] = raw[k][k2]
+							self.nonNumerics = True
+						#print self.data[self.rows[n]][self.cols[n2]]
 				except IndexError:
-					temp = "salty"
-				self.rows = self.rows[:len(self.data)]
-				print "an index error occured -\\_('_')_/- \n this may be the end of your file at "+("row" if rowNames else "line")+" "+str(n)+"\n!  @  "+target+"  @  !"
+					try:
+						del self.data[self.rows[n]]
+					except IndexError:
+						temp = "salty"
+					self.rows = self.rows[:len(self.data)]
+					#print "an index error occured -\\_('_')_/- \n this may be the end of your file at "+("row" if rowNames else "line")+" "+str(n)+"\n!  @  "+target+"  @  !"
+					#print target
 	def addNote(self, n):		
 		try:
 			temp = self.note
@@ -134,8 +211,27 @@ class frame:
 			except KeyError:
 				out+=redPrint(str(""),15)
 		return("\n\n"+out+"\n\n")
-	def csv():
-		print("Todo")
+	def csv(self, rowdelim = "\n", coldelim = "\t"):
+		top = ""
+		if len(self.rows) > 0:
+			top+=coldelim
+		for k in self.rows:
+			top+=str(k)+coldelim
+		if len(self.cols) > 0:
+			top = top[:-len(coldelim)]
+		if len(top)>0:
+			top+="\n"
+		body = ""
+		for k in self.rows:
+			body+=str(k)+coldelim
+			for k2 in self.cols:
+				try:
+					body+=str(self.data[k2][k])+coldelim
+				except KeyError:
+					body+=coldelim
+			top = top[:-len(coldelim)]
+			body+=rowdelim
+		return(top+body)
 
 def testCSV():
 	kframe = frame()
@@ -145,6 +241,7 @@ def testCSV():
 	kframe.clear()
 	kframe.loadFromCsv("./testData/basicTestData.csv",rowNames=True, colNames=True)
 	print(kframe.pretty())
+
 #testCSV()
 import make as kl #klearner
 def klTest():
@@ -167,6 +264,9 @@ def geoTest():
 	euc = gt.eucToCord(xyz[0],xyz[1],xyz[2])
 	print xyz,euc
 #geoTest()
+
+import analysisTools as at
+# TODO write tests and more clustering methods.
 
 import Image, ImageDraw
 #Characters are fixed font drawn on a 2x4 grid where y = 3 is the text line bottm.
@@ -291,9 +391,6 @@ def durp7(l):
 
 def boy(x,y,xname="xName",yname="yName"):
 	return(toMatLabArray(xname,x),toMatLabArray(yname,y))
-	
-
-import os
 
 def mlSurf(arr,opFile,xlabel = "x", ylabel = "y" , title = "title", xticks = None , yticks = None):
 	varstr = toMatLabArray("InvestmentReturns",arr)
@@ -339,7 +436,7 @@ def  mlSurfTest2():
 def gridToPixles(tmin,tmax,ymin,ymax,w,h,t,y):
 	retT = ((t-tmin)/(tmax-tmin))*w
 	retY = ((ymax-y)/(ymax-ymin))*h
-return((retT,retY))
+	return((retT,retY))
 
 
 
